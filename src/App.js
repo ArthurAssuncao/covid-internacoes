@@ -42,7 +42,7 @@ const App = () => {
   return (
     <div className="App">
       <Helmet>
-        <title>Covid-19 Internações</title>
+        <title>Covid-19 Internações Hospitalares</title>
         <meta name="author" content="Arthur Assunção" />
         <meta name="dcterms.rightsHolder" content="Arthur Assunção" />
         <meta name="description" content="Covid Internações: O número de intenações por casos respiratórios causados pelo corona vírus" />
