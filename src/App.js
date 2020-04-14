@@ -87,7 +87,7 @@ const App = () => {
                           />
                       </YAxis>
                       <Legend />
-                      <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                      <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={(value) => value.toFixed(2)} />
                       <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
                       <Line type="monotone" dataKey="2020" stroke="#8884d8" yAxisId={0} />
                       <Line type="monotone" dataKey="2019" stroke="#8dd1e1" yAxisId={0} />
