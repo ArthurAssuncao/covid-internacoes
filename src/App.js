@@ -7,6 +7,8 @@ import { Helmet } from 'react-helmet';
 import { Layout, PageHeader, Tabs, Divider, Typography } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVirus } from '@fortawesome/free-solid-svg-icons';
+import {withGetScreen} from 'react-getscreen'
+import ReactGA from 'react-ga';
 import logo from './virus-icon.png';
 
 import ContentStatistics from './ContentStatistics';
@@ -15,7 +17,9 @@ const { Text, Title, Paragraph } = Typography;
 const { Header, Footer, Content } = Layout;
 const { TabPane } = Tabs;
 
-const App = () => {
+ReactGA.initialize('UA-163325072-1');
+
+const App = (props) => {
   const [brasil, setBrasil] = useState([]);
   const urlFonteInfoGripe = "<http://info.gripe.fiocruz.br/>";
   const urlFonteCovidBrasil = "<https://apify.com/pocesar/covid-brazil>";
@@ -29,12 +33,22 @@ const App = () => {
   }, []);
 
   const generateRange = (start, end, step) => {
+      if (props.isMobile()){
+        step = step * 2;
+      }
       const array = [];
       const y = start - end > 0 ? start - end : end - start;
       for (let i=start; i <= y; i += step) {
           array.push(i);
       }
       return array;
+  }
+
+  const generateYAxisLabel = () => {
+    if (props.isMobile()){
+      return "Por 100 mil habitantes";
+    }
+    return "Incidência de SRAG (por 100 mil habitantes)";
   }
 
   const yAxisRange = generateRange(0, 5.5, 0.5);
@@ -80,7 +94,7 @@ const App = () => {
                       <XAxis dataKey="epiweek_label" height={50} tick={{strokeWidth: 2}} tickSize={2} padding={{ top: 10 }} label="Semana do ano" />
                       <YAxis interval={0} type="number" domain={[0, 'dataMax + 0.5']} ticks={yAxisRange}>
                         <Label
-                          value="Incidência de SRAG (por 100 mil habitantes)"
+                          value={generateYAxisLabel()}
                           position="insideLeft"
                           angle={-90}
                           className="yAxisLabel"
@@ -162,4 +176,4 @@ const App = () => {
   );
 }
 
-export default App;
+export default withGetScreen(App);

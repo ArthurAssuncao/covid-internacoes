@@ -6,8 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #eee;
-  margin: 0 auto;
+  background-color: #fff;
 }
 
 .App-logo {
@@ -26,17 +25,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: #333;
 }
 
 .layout {
-  box-shadow: 2px 2px 5px 5px #ddd;
+  box-shadow: 0px 0px 10px 5px #ddd;
   border-radius: 10px;
   border: 1px solid rgba(224,255,255, 1);
   padding: 10px;
   background-color: #fff;
   background-clip: border-box;
+  margin: 0 auto;
 }
 
 .content {
@@ -58,15 +57,6 @@
 
 .App-link {
   color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .grafico {
@@ -100,6 +90,7 @@
   .header {
     flex-direction: row;
     min-height: 75vh;
+    font-size: calc(9px + 2vmin);
   }
   .site-page-header-responsive div div{
     flex-direction: column;
@@ -107,6 +98,7 @@
   .layout {
     margin: 5px;
     width: 95vw;
+    margin-left: 12px;
   }
   .content {
     padding-left: 10px;
@@ -117,6 +109,12 @@
   }
   .divider-header {
     display: none;
+  }
+}
+
+@media(min-width: 481px) {
+  .header {
+    font-size: calc(10px + 2vmin);
   }
 }
 
