@@ -1,0 +1,33 @@
+
+
+
+.content-statistics {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    color: #333;
+}
+
+.content-statistics-main {
+    width: 50%;
+}
+
+.content-statistics-extra {
+    width: 50%;
+}
+
+.ant-statistic-content {
+    color: #333;
+}
+
+.statistic-world {
+    display: 'flex';
+    width: 'max-content';
+    justify-content: 'flex-end';
+}
+
+.statistic-world > div {
+    display: flex;
+    flex-direction: row;
+}
