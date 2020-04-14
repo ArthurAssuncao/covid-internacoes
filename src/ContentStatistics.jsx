@@ -62,7 +62,8 @@ const ContentStatistics = () => {
   return (
     <div className="content-statistics">
       <div className="content-statistics-main"><RenderContent /></div>
-      <Divider type="vertical" style={{ height: '130px' }} />
+      <Divider className="divider-header" type="vertical" />
+      <Divider className="divider2-header" />
       <div className="content-statistics-extra"><ExtraContent /></div>
     </div>
   );

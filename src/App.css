@@ -4,10 +4,10 @@
 .App {
   text-align: center;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: #eee;
+  margin: 0 auto;
 }
 
 .App-logo {
@@ -23,9 +23,7 @@
 
 .header {
   background-color: #fff;
-  min-height: 50vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
@@ -33,8 +31,6 @@
 }
 
 .layout {
-  width: 80vw;
-  margin: 20px;
   box-shadow: 2px 2px 5px 5px #ddd;
   border-radius: 10px;
   border: 1px solid rgba(224,255,255, 1);
@@ -45,8 +41,6 @@
 
 .content {
   background-color: #fff;
-  padding-left: 50px;
-  padding-right: 50px;
 }
 
 .footer {
@@ -58,7 +52,7 @@
   border: 1px solid rgb(235, 237, 240);
 }
 
-.fonte, .metodologia {
+.fonte, .metodologia, .contribuir {
   text-align: left;
 }
 
@@ -77,4 +71,78 @@
 
 .grafico {
   margin: 0 auto;
+}
+
+.parentGrid {
+  display: grid;
+  grid-template-areas:
+    'rodoabad'
+    'otherGrid';
+    grid-template-columns: 100%;
+}
+
+.otherChildGrid {
+  grid-area: otherGrid
+}
+
+.rodoabad {
+  grid-area: rodoabad;
+}
+
+.yAxisLabel {
+  text-anchor: middle;
+}
+
+@media(min-width: 0px) {
+  .App {
+    flex-direction: row;
+  }
+  .header {
+    flex-direction: row;
+    min-height: 75vh;
+  }
+  .site-page-header-responsive div div{
+    flex-direction: column;
+  }
+  .layout {
+    margin: 5px;
+    width: 95vw;
+  }
+  .content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .yAxisLabel {
+    font-size: 8px;
+  }
+  .divider-header {
+    display: none;
+  }
+}
+
+@media(min-width: 993px) {
+  .App {
+    flex-direction: column;
+  }
+  .header {
+    flex-direction: column;
+    min-height: 50vh;
+  }
+  .site-page-header-responsive div div{
+    flex-direction: row;
+  }
+  .layout {
+    margin: 20px;
+    width: 80vw;
+  }
+  .content {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+  .yAxisLabel {
+    font-size: 18px;
+  }
+  .divider-header {
+    display: block;
+  }
 }

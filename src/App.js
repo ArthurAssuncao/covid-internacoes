@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceArea, Label
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceArea, Label, ResponsiveContainer
 } from 'recharts';
 import { Helmet } from 'react-helmet';
 import { Layout, PageHeader, Tabs, Divider, Typography } from 'antd';
@@ -55,7 +55,7 @@ const App = () => {
             <PageHeader
               className="site-page-header-responsive"
               title="Covid-19 Internações hospitalares - Brasil"
-              subTitle="Crescimento das internações hospitalares por problemas respiratórios"
+              subTitle="Crescimento das internações por problemas respiratórios"
               avatar={{ icon: <FontAwesomeIcon icon={faVirus} /> }}
               >
               <Divider />
@@ -67,32 +67,38 @@ const App = () => {
           <Tabs defaultActiveKey="1">
             <TabPane tab="Brasil" key="1">
               <Title level={4}>Incidência de hospitalizados por SRAG (Síndrome Respiratória Aguda Grave)</Title>
-              <LineChart
-                width={600}
-                height={400}
-                className="grafico"
-                data={brasil}
-                margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-              >
-                <XAxis dataKey="epiweek_label" height={50} tick={{strokeWidth: 2}} tickSize={2} padding={{ top: 10 }} label="Semana do ano" />
-                <YAxis interval={0} type="number" domain={[0, 'dataMax + 0.5']} ticks={yAxisRange}>
-                  <Label
-                    value="Incidência de SRAG (por 100 mil habitantes)"
-                    position="insideLeft"
-                    angle={-90}
-                    style={{ textAnchor: 'middle' }}
-                    />
-                </YAxis>
-                <Legend />
-                <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
-                <Line type="monotone" dataKey="2020" stroke="#8884d8" yAxisId={0} />
-                <Line type="monotone" dataKey="2019" stroke="#8dd1e1" yAxisId={0} />
-                <Line type="monotone" dataKey="2017_2019" stroke="#a4de6c" yAxisId={0} />
-                <Line type="monotone" dataKey="2015_2019" stroke="#ffc658" yAxisId={0} />
-                <ReferenceArea y1={1.75} y2={2.4} stroke="orange" strokeOpacity={0.3} label="Atividade alta" />
-                <ReferenceArea y1={2.41} y2={5} stroke="red" strokeOpacity={0.3} label="Atividade muito alta" />
-              </LineChart>
+              <div className="parentGrid grafico-container">
+                <div className="rodoabad">
+                  <ResponsiveContainer aspect={1.6}>
+                    <LineChart
+                      width={600}
+                      height={400}
+                      className="grafico"
+                      data={brasil}
+                      margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                    >
+                      <XAxis dataKey="epiweek_label" height={50} tick={{strokeWidth: 2}} tickSize={2} padding={{ top: 10 }} label="Semana do ano" />
+                      <YAxis interval={0} type="number" domain={[0, 'dataMax + 0.5']} ticks={yAxisRange}>
+                        <Label
+                          value="Incidência de SRAG (por 100 mil habitantes)"
+                          position="insideLeft"
+                          angle={-90}
+                          className="yAxisLabel"
+                          />
+                      </YAxis>
+                      <Legend />
+                      <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                      <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
+                      <Line type="monotone" dataKey="2020" stroke="#8884d8" yAxisId={0} />
+                      <Line type="monotone" dataKey="2019" stroke="#8dd1e1" yAxisId={0} />
+                      <Line type="monotone" dataKey="2017_2019" stroke="#a4de6c" yAxisId={0} />
+                      <Line type="monotone" dataKey="2015_2019" stroke="#ffc658" yAxisId={0} />
+                      <ReferenceArea y1={1.75} y2={2.4} stroke="orange" strokeOpacity={0.3} label="Atividade alta" />
+                      <ReferenceArea y1={2.41} y2={5} stroke="red" strokeOpacity={0.3} label="Atividade muito alta" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
               Fonte: InfoGripe da FioCruz.
             </TabPane>
             <TabPane tab="Estados" key="2">
@@ -136,6 +142,16 @@ const App = () => {
             <Paragraph><Text>
               Javier Aviles. CovidAPI - Coronavirus API for Current cases by country COVID-19. Disponível em: {urlFonteCovidMundo}.
             </Text></Paragraph>
+          </section>
+          <Divider />
+          <section className="contribuir">
+            <Title level={4}>Quer Contribuir com o projeto?</Title>
+            <Paragraph>
+              Faça um fork do projeto, realize o <em>download</em> do projeto no <a href="https://github.com/ArthurAssuncao/covid-internacoes">Github do Covid-Internações</a>, adicione códigos e submeta um <em>pull request</em>.
+            </Paragraph>
+            <Paragraph>
+              Para executar o projeto, basta seguir o Readme.
+            </Paragraph>
           </section>
           <Divider />
         </Content>
