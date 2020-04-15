@@ -25,14 +25,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  font-size: calc(10px + 2vmin);
   color: #333;
 }
 
 .layout {
-  box-shadow: 0px 0px 10px 5px #ddd;
-  border-radius: 10px;
-  border: 1px solid rgba(224,255,255, 1);
-  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  padding: 20px;
   background-color: #fff;
   background-clip: border-box;
   margin: 0 auto;
@@ -44,7 +47,7 @@
 
 .footer {
   background-color: #fff;
-  textAlign: 'center';
+  text-align: 'center';
 }
 
 .site-page-header-responsive {
@@ -95,11 +98,6 @@
   .site-page-header-responsive div div{
     flex-direction: column;
   }
-  .layout {
-    margin: 5px;
-    width: 95vw;
-    margin-left: 12px;
-  }
   .content {
     padding-left: 10px;
     padding-right: 10px;
@@ -132,6 +130,9 @@
   .layout {
     margin: 20px;
     width: 80vw;
+    box-shadow: 2px 2px 5px 5px #ddd;
+    border-radius: 10px;
+    border: 1px solid rgba(224,255,255, 1);
   }
   .content {
     padding-left: 50px;
