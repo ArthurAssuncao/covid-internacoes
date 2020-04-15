@@ -4,7 +4,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceArea, Label, ResponsiveContainer
 } from 'recharts';
 import { Helmet } from 'react-helmet';
-import { Layout, PageHeader, Tabs, Divider, Typography } from 'antd';
+import { Layout, PageHeader, Tabs, Divider, Typography, Tag } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVirus } from '@fortawesome/free-solid-svg-icons';
 import {withGetScreen} from 'react-getscreen'
@@ -168,6 +168,11 @@ const App = (props) => {
             </Paragraph>
           </section>
           <Divider />
+          <section className="contribuidores">
+            <Title level={4}>Contribuidores</Title>
+            <Tag><a href="https://github.com/ljnferreira">Lucas Ferreira</a></Tag>
+          </section>
+          {/*<Divider />*/}
         </Content>
 
         <Footer className="footer">Covid Internações ©2020 Criado por <a href='http://arthurassuncao.com'>Arthur Assunção</a></Footer>
