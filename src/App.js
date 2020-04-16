@@ -18,6 +18,40 @@ const { Header, Footer, Content } = Layout;
 
 ReactGA.initialize('UA-163325072-1');
 
+const COLORS = [
+  '#8884d8',
+  '#8dd1e1',
+  '#a4de6c',
+  '#ffc658',
+  "#d1cd70",
+  "#5ab89e",
+  "#26a0a7",
+  "#a2da91",
+  "#dfb054",
+  "#ec983d",
+  "#e7a145",
+  '#3366CC',
+  '#DC3912',
+  '#FF9900',
+  '#109618',
+  '#990099',
+  '#3B3EAC',
+  '#0099C6',
+  '#DD4477',
+  '#66AA00',
+  '#B82E2E',
+  '#316395',
+  '#994499',
+  '#22AA99',
+  '#AAAA11',
+  '#6633CC',
+  '#E67300',
+  '#8B0707',
+  '#329262',
+  '#5574A6',
+  '#3B3EAC'
+]
+
 const App = (props) => {
   const [brasil, setBrasil] = useState([]);
   const [regioes, setRegioes] = useState([]);
@@ -74,7 +108,7 @@ const App = (props) => {
         <text
           x={0}
           y={0}
-          dx={20}
+          dx={10}
           dy={13}
           textAnchor="end"
           fill="#666"
@@ -167,7 +201,7 @@ const App = (props) => {
                     <Line type="monotone" dataKey="2019" stroke="#8dd1e1" yAxisId={0} />
                     <Line type="monotone" dataKey="2017_2019" stroke="#a4de6c" yAxisId={0} />
                     <Line type="monotone" dataKey="2015_2019" stroke="#ffc658" yAxisId={0} />
-                    <ReferenceArea y1={1.75} y2={2.4} stroke="orange" strokeOpacity={0.3} label={<Label
+                    <ReferenceArea y1={1.75} y2={2.4} stroke="#DC3912" strokeOpacity={0.3} label={<Label
                       value="Atividade alta"
                       className="grafico-text"
                       />} />
@@ -208,19 +242,19 @@ const App = (props) => {
                       <Legend formatter={fixLegend} />
                       <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={fixTooltip} labelFormatter={fixLabelTooltip} />
                       <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" />
-                      <Line type="monotone" dataKey="Norte (2020)" stroke="#8884d8" yAxisId={0} />
-                      <Line type="monotone" dataKey="Norte (2017_2019)" stroke="#a4de6c" yAxisId={0} />
-                      <Line type="monotone" dataKey="Nordeste (2020)" stroke="#8884d8" yAxisId={0} />
-                      <Line type="monotone" dataKey="Nordeste (2017_2019)" stroke="#a4de6c" yAxisId={0} />
-                      <Line type="monotone" dataKey="Distrito Federal (2020)" stroke="#8884d8" yAxisId={0} />
-                      <Line type="monotone" dataKey="Distrito Federal (2017_2019)" stroke="#a4de6c" yAxisId={0} />
-                      <Line type="monotone" dataKey="Sudeste (2020)" stroke="#8884d8" yAxisId={0} />
-                      <Line type="monotone" dataKey="Sudeste (2017_2019)" stroke="#a4de6c" yAxisId={0} />
-                      <Line type="monotone" dataKey="Centro-Oeste (2020)" stroke="#8884d8" yAxisId={0} />
-                      <Line type="monotone" dataKey="Centro-Oeste (2017_2019)" stroke="#a4de6c" yAxisId={0} />
-                      <Line type="monotone" dataKey="Sul (2020)" stroke="#8884d8" yAxisId={0} />
-                      <Line type="monotone" dataKey="Sul (2017_2019)" stroke="#a4de6c" yAxisId={0} />
-                      <ReferenceArea y1={1.75} y2={2.4} stroke="orange" strokeOpacity={0.3} label={<Label
+                      <Line type="monotone" dataKey="Norte (2020)" legendType='circle' dot={{ fill: COLORS[0], strokeWidth: 2 }} stroke={COLORS[0]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Norte (2017_2019)" stroke={COLORS[1]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Nordeste (2020)" legendType='circle' dot={{ fill: COLORS[2], strokeWidth: 2 }} stroke={COLORS[2]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Nordeste (2017_2019)" stroke={COLORS[3]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Distrito Federal (2020)" legendType='circle' dot={{ fill: COLORS[4], strokeWidth: 2 }} stroke={COLORS[4]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Distrito Federal (2017_2019)" stroke={COLORS[5]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Sudeste (2020)" legendType='circle' dot={{ fill: COLORS[6], strokeWidth: 2 }} stroke={COLORS[6]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Sudeste (2017_2019)" stroke={COLORS[7]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Centro-Oeste (2020)" legendType='circle' dot={{ fill: COLORS[8], strokeWidth: 2 }} stroke={COLORS[8]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Centro-Oeste (2017_2019)" stroke={COLORS[9]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Sul (2020)" legendType='circle' dot={{ fill: 'gray', strokeWidth: 2 }} stroke={COLORS[10]} yAxisId={0} />
+                      <Line type="monotone" dataKey="Sul (2017_2019)" stroke={COLORS[11]} yAxisId={0} />
+                      <ReferenceArea y1={1.75} y2={2.4} stroke="#DC3912" strokeOpacity={0.3} label={<Label
                           value="Atividade alta"
                           className="grafico-text"
                           />} />
