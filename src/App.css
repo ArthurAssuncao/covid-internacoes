@@ -86,6 +86,10 @@
   text-anchor: middle;
 }
 
+.grafico-text {
+  color: #333;
+}
+
 @media(min-width: 0px) {
   .App {
     flex-direction: row;
@@ -103,10 +107,19 @@
     padding-right: 10px;
   }
   .yAxisLabel {
-    font-size: 8px;
+    font-size: 9px;
   }
   .divider-header {
     display: none;
+  }
+  .grafico {
+    min-height: 20vh;
+  }
+  .section-grafico {
+    margin: 20px 0;
+  }
+  .grafico-text {
+    font-size: 11px;
   }
 }
 
@@ -143,5 +156,8 @@
   }
   .divider-header {
     display: block;
+  }
+  .grafico-text {
+    font-size: 14px;
   }
 }
