@@ -60,6 +60,7 @@ const App = (props) => {
   const urlFonteCovidMundo = "<https://github.com/javieraviles/covidAPI>";
 
   useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
     fetch('https://covid-internacoes.firebaseio.com/brasil.json').then(res => res.json()).then(data => {
       console.log('Brasil: ', data);
       setBrasil(data);
