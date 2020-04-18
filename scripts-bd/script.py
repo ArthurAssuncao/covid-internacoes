@@ -126,6 +126,14 @@ headers_default = {
   'Sec-Fetch-User': '?1'
 }
 
+def download_save_all_json():
+  for ano in anos:
+    for semana in range(1, max_semanas):
+      success, newJson = download_json(ano, semana)
+      if success:
+        file_path = 'bases_json/base_{}_{}.json'.format(ano, semana)
+        save_file(newJson, file_path)
+
 def download_json(ano, semana):
   url = url_base.format(ano, semana)
   print(url)
@@ -204,8 +212,10 @@ def generate_base_ano_media(anos_base, estado):
 def generate_semana_label(semana):
   import datetime
   d = '2020-W{}'.format(semana-1)
-  r = datetime.datetime.strptime(d + '-1', "%Y-W%W-%w")
-  return r.strftime('%d-%b')
+  r1 = datetime.datetime.strptime(d + '-1', "%Y-W%W-%w")
+  r2 = datetime.datetime.strptime(d + '-0', "%Y-W%W-%w")
+  semana_label = '{}_{}'.format(r1.strftime('%d-%b'), r2.strftime('%d-%b'))
+  return semana_label
 
 def generate_semana_recharts(jsonObj, indice, semana):
   values = {}
@@ -388,11 +398,34 @@ def generate_new_base_regioes(jsonEstados):
       pass
   return {'regioes': jsonObj}
 
+def update_firebase(bd_brasil, bd_regioes):
+  import firebase_admin
+  from firebase_admin import credentials
+  from firebase_admin import db
 
+  # Fetch the service account key JSON file contents
+  cred = credentials.Certificate('firebase-adminsdk.json')
+  # Initialize the app with a service account, granting admin privileges
+  firebase_admin.initialize_app(cred, {
+      'databaseURL': 'https://covid-internacoes.firebaseio.com/'
+  })
+  ref = db.reference('/')
+  ref.set({
+    'brasil': bd_brasil['brasil'],
+    'regioes': bd_regioes['regioes'],
+  })
 
+# ano = 2020
+# semana = 15
+# success, newJson = download_json(ano, semana)
+# if success:
+#   file_path = 'bases_json/base_{}_{}.json'.format(ano, semana)
+#   save_file(newJson, file_path)
 bd_brasil = generate_new_base_brasil()
 save_file(bd_brasil, 'bd/brasil.json')
 bd_estados = generate_new_base_estados()
 save_file(bd_estados, 'bd/estados.json')
 bd_regioes = generate_new_base_regioes(bd_estados)
 save_file(bd_regioes, 'bd/regioes.json')
+
+update_firebase(bd_brasil, bd_regioes)

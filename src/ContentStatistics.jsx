@@ -18,10 +18,12 @@ const RenderContent = () => {
 
   useEffect(() => {
     fetch('https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST?disableRedirect=true').then(res => res.json()).then(data => {
-      console.log(data);
+      // console.log(data);
       setAtivos(data['infected']);
       // setRecuperados(data['recovered']);
       setFatais(data['deceased']);
+    }).catch(function() {
+        console.error("error");
     });
   }, []);
 
@@ -43,9 +45,11 @@ const ExtraContent = () => {
 
   useEffect(() => {
     fetch('https://coronavirus-19-api.herokuapp.com/all').then(res => res.json()).then(data => {
-      console.log(data);
+      // console.log(data);
       setAtivos(data['cases']);
       setFatais(data['deaths']);
+    }).catch(function() {
+        console.error("error");
     });
   }, []);
 

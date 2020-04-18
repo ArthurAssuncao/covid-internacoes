@@ -7,7 +7,8 @@ import { Helmet } from 'react-helmet';
 import { Layout, PageHeader, Divider, Typography, Tag } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVirus } from '@fortawesome/free-solid-svg-icons';
-import {withGetScreen} from 'react-getscreen'
+import {withGetScreen} from 'react-getscreen';
+import { Buffer } from 'buffer';
 import ReactGA from 'react-ga';
 import logo from './virus-icon.png';
 
@@ -58,16 +59,25 @@ const App = (props) => {
   const urlFonteInfoGripe = "<http://info.gripe.fiocruz.br/>";
   const urlFonteCovidBrasil = "<https://apify.com/pocesar/covid-brazil>";
   const urlFonteCovidMundo = "<https://github.com/javieraviles/covidAPI>";
+  const contactEmail = Buffer.from('Y29udGF0b1thdF1hcnRodXJhc3N1bmNhby5jb20=', 'base64').toString('utf-8');
 
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
-    fetch('https://covid-internacoes.firebaseio.com/brasil.json').then(res => res.json()).then(data => {
-      console.log('Brasil: ', data);
+    const urlApiBrasil = 'https://covid-internacoes.firebaseio.com/brasil.json';
+    // urlApiBrasil = 'http://localhost:8000/brasil.json';
+    fetch(urlApiBrasil).then(res => res.json()).then(data => {
+      // data = data['brasil'];
+      // console.log('Brasil: ', data);
       setBrasil(data);
+    }).catch(function() {
+        console.error("error");
     });
-    fetch('https://covid-internacoes.firebaseio.com/regioes.json').then(res => res.json()).then(data => {
-      console.log('Regioes: ', data);
+    const urlApiRegioes = 'https://covid-internacoes.firebaseio.com/regioes.json';
+    fetch(urlApiRegioes).then(res => res.json()).then(data => {
+      // console.log('Regioes: ', data);
       setRegioes(data);
+    }).catch(function() {
+        console.error("error");
     });
   }, []);
 
@@ -78,16 +88,23 @@ const App = (props) => {
     return 1.6;
   }
 
-  const generateRange = (start, end, step) => {
+  const getIntervalX = () => {
+    if (props.isMobile()){
+      return 'preserveEnd';
+    }
+    return 0;
+  }
+
+  const generateRangeY = (start, end, step) => {
       if (props.isMobile()){
         step = step * 2;
       }
-      const array = [];
+      const labels = [];
       const y = start - end > 0 ? start - end : end - start;
       for (let i=start; i <= y; i += step) {
-          array.push(i);
+        labels.push(i);
       }
-      return array;
+      return labels;
   }
 
   const generateYAxisLabel = () => {
@@ -103,9 +120,10 @@ const App = (props) => {
 
   const fixTickX = (props) => {
     const { x, y, payload } = props;
+    const [dateStart, dateEnd] = payload.value.split('_')
 
     return (
-      <g transform={`translate(${x},${y})`}>
+      <g transform={`translate(${x},${y}), rotate(-30)`}>
         <text
           x={0}
           y={0}
@@ -115,7 +133,8 @@ const App = (props) => {
           fill="#666"
           className="grafico-text"
         >
-          {payload.value}
+          <tspan x="0" dy="1.2em">{dateStart} a</tspan>
+          <tspan x="0" dy="1.2em">{dateEnd}</tspan>
         </text>
       </g>
     );
@@ -140,11 +159,16 @@ const App = (props) => {
     );
   }
 
-  const fixTooltip = (value) => value.toFixed(2);
+  const fixTooltip = (value, name) => {
+    name = name.replace('_', ' a ');
+    value = value.toFixed(2);
+    return [value, name];
+  }
 
   const fixLabelTooltip = (value) => value.replace('_', ' a ');
-
-  const yAxisRange = generateRange(0, 5.5, 0.5);
+  const intervalX = getIntervalX();
+  const yAxisRange = generateRangeY(0, 5.5, 0.5);
+  const chartHeight = 50;
 
   return (
     <div className="App">
@@ -183,10 +207,7 @@ const App = (props) => {
                     data={brasil}
                     margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
                   >
-                    <XAxis dataKey="epiweek_label" tick={fixTickX} height={50} tickSize={2} padding={{ top: 10 }} label={<Label
-                        value="Semana do ano"
-                        className="grafico-text"
-                        />} />
+                    <XAxis dataKey="epiweek_label" tick={fixTickX} height={chartHeight} tickSize={2} interval={intervalX} />
                     <YAxis interval={0} type="number" tick={fixTickY} domain={[0, 'dataMax + 0.5']} ticks={yAxisRange}>
                       <Label
                         value={generateYAxisLabel()}
@@ -228,10 +249,7 @@ const App = (props) => {
                       data={regioes}
                       margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
                     >
-                      <XAxis dataKey="epiweek_label" tick={fixTickX} height={50} tickSize={2} padding={{ top: 10 }} label={<Label
-                        value="Semana do ano"
-                        className="grafico-text"
-                        />} />
+                      <XAxis type="category" dataKey="epiweek_label" tick={fixTickX} height={chartHeight} tickSize={2} interval={intervalX} />
                       <YAxis interval={0} type="number" tick={fixTickY} domain={[0, 'dataMax + 0.5']} ticks={yAxisRange}>
                         <Label
                           value={generateYAxisLabel()}
@@ -309,7 +327,10 @@ const App = (props) => {
           <section className="contribuir">
             <Title level={4}>Quer Contribuir com o projeto?</Title>
             <Paragraph>
-              Faça um fork do projeto, realize o <em>download</em> do projeto no <a href="https://github.com/ArthurAssuncao/covid-internacoes">Github do Covid-Internações</a>, adicione códigos e submeta um <em>pull request</em>.
+              Envie e-mail para {contactEmail} ou...
+            </Paragraph>
+            <Paragraph>
+              Faça um <em>fork (cópia)</em> do projeto, realize o <em>download</em> do projeto no <a href="https://github.com/ArthurAssuncao/covid-internacoes">Github do Covid-Internações</a>, adicione códigos e submeta um <em>pull request</em>.
             </Paragraph>
             <Paragraph>
               Para executar o projeto, basta seguir o Readme.
