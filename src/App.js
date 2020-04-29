@@ -165,9 +165,10 @@ const App = (props) => {
     return [value, name];
   }
 
+  const maxValue = 7
   const fixLabelTooltip = (value) => value.replace('_', ' a ');
   const intervalX = getIntervalX();
-  const yAxisRange = generateRangeY(0, 5.5, 0.5);
+  const yAxisRange = generateRangeY(0, maxValue, 0.5);
   const chartHeight = 50;
 
   return (
@@ -231,6 +232,10 @@ const App = (props) => {
                       value="Atividade muito alta"
                       className="grafico-text"
                       />} />
+                    <ReferenceArea y1={5} y2={maxValue} stroke="red" strokeOpacity={0.3} label={<Label
+                          value="Atividade altíssima"
+                          className="grafico-text"
+                          />} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -281,6 +286,10 @@ const App = (props) => {
                           value="Atividade muito alta"
                           className="grafico-text"
                           />} />
+                      <ReferenceArea y1={5} y2={maxValue} stroke="red" strokeOpacity={0.3} label={<Label
+                          value="Atividade altíssima"
+                          className="grafico-text"
+                          />} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -296,18 +305,18 @@ const App = (props) => {
             <ol>
               <li>Dados de 2020.</li>
               <li>Dados de 2019.</li>
-              <li>Média aritmética simples dos dados de 2017_2019.</li>
-              <li>Média aritmética simples dos dados de 2015_2019.</li>
+              <li>Média aritmética simples dos dados de 2017 a 2019.</li>
+              <li>Média aritmética simples dos dados de 2015 a 2019.</li>
             </ol>
             <Paragraph>
-             _partir dos dados, realizamos comparações por meio de gráficos onde é possível ver que o número de hospitalizados por problemas respiratórios cresceu muito, coincidentemente ou não, no mesmo período de início dos casos de covid-19 no Brasil.
+             A partir dos dados, realizamos comparações por meio de gráficos onde é possível ver que o número de hospitalizados por problemas respiratórios cresceu muito, coincidentemente ou não, no mesmo período de início dos casos de covid-19 no Brasil.
             </Paragraph>
             <Paragraph>
               As áreas de limite são definidas baseadas no <a href="http://info.gripe.fiocruz.br/help">Help do Info Grip</a>
             </Paragraph>
             <Title level={4}>Limitações</Title>
             <Paragraph>
-              Alguns dados mais recentes são reportados como "Dado estáveis. Sujeito_pequenas alterações", "Estimado. Sujeito_alterações" e "Dados incompletos. Sujetio_grandes alterações", dessa forma devemos entender que alguns dados, principalmente das semanas mais recentes poderão sofrer alterações, tanto para valores menores quanto para valores maiores. Mais informações sobre os dados ver o <a href="http://info.gripe.fiocruz.br/help">Help do Info Grip</a>.
+              Alguns dados mais recentes são reportados como "Dado estáveis. Sujeito à pequenas alterações", "Estimado. Sujeito à alterações" e "Dados incompletos. Sujetio à grandes alterações", dessa forma devemos entender que alguns dados, principalmente das semanas mais recentes poderão sofrer alterações, tanto para valores menores quanto para valores maiores. Mais informações sobre os dados ver o <a href="http://info.gripe.fiocruz.br/help">Help do Info Grip</a>.
             </Paragraph>
           </section>
           <Divider />
@@ -337,6 +346,10 @@ const App = (props) => {
             </Paragraph>
           </section>
           <Divider />
+          <section className="noticias">
+            <Title level={4}>Notícias Relacionadas</Title>
+            <Paragraph><a href="https://g1.globo.com/bemestar/coronavirus/noticia/2020/04/23/estudo-mostra-aumento-expressivo-de-internacoes-por-sindromes-respiratorias-e-indica-subnotificacao-da-covid-19.ghtml">Estudo mostra aumento expressivo de internações por síndromes respiratórias e indica subnotificação da Covid-19</a><span className="news-date">23/04/2020</span></Paragraph>
+          </section>
           <section className="contribuidores">
             <Title level={4}>Contribuidores</Title>
             <Tag><a href="https://github.com/ljnferreira">Lucas Ferreira</a></Tag>
