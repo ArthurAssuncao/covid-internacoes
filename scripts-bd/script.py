@@ -6,7 +6,8 @@ import time
 import re
 
 anos = [2015, 2016, 2017, 2018, 2019, 2020]
-max_semanas = 52
+# soma 1 por causa do range
+max_semanas = 52 + 1
 url_base = 'http://info.gripe.fiocruz.br/data/detailed/1/1/{}/{}/1/Brasil/data-table'
 estados = {
     'Acre': 'AC',
@@ -112,6 +113,15 @@ estados_regiao = {
 
 lista_estados = estados.keys()
 
+populacao_100mil = {
+  '2020': 216552469 / 100000,
+  '2019': 214599613 / 100000,
+  '2018': 212664367 / 100000,
+  '2017': 210746573 / 100000,
+  '2016': 208846074 / 100000,
+  '2015': 206962713 / 100000
+}
+
 
 headers_default = {
     'Accept': 'application/json,text/*;q=0.99',
@@ -153,8 +163,16 @@ def download_json(ano, semana):
 
 
 def save_file(jsonObj, file_path):
+    jsonString = json.dumps(jsonObj, ensure_ascii=False)
+    # não salva se o conteúdo for igual
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf8') as arq:
+            conteudo_arq = arq.read()
+            if conteudo_arq == jsonString:
+                print("Não salvou porque o conteúdo é igual")
+                return
     with open(file_path, 'w', encoding='utf8') as arq:
-        data = json.dumps(jsonObj, ensure_ascii=False)
+        data = jsonString
         arq.write(data)
 
 
@@ -423,8 +441,34 @@ def generate_new_base_regioes(jsonEstados):
             pass
     return {'regioes': jsonObj}
 
+def generate_num_casos_abs(estado):
+    years = {'2020': ['2020'], '2019': ['2019'], '2017_2019': ['2017', '2018', '2019'], '2015_2019': ['2015', '2016', '2017', '2018', '2019']}
+    data = {}
+    for key in years.keys():
+        data_local = {}
+        for year in years[key]:
+            new_data = generate_base_ano(year, estado)
+            try:
+                for semana in range(1, max_semanas):
+                    indice = semana - 1
+                    if new_data[indice]['epiweek'] == semana:
+                        if year not in data_local:
+                            data_local[year] = 0
+                        data_local[year] = data_local[year] + new_data[indice]['value']
+                    else:
+                        raise ValueError('{} deveria ser {}'.format(new_data[indice]['epiweek'], semana))
+            except IndexError as e:
+                pass
+            data_local[year] = data_local[year] * populacao_100mil[year]
+        # pega média
+        soma = 0
+        for year in years[key]:
+            soma = soma + data_local[year]
+        data[key] = soma / len(years[key])
+    return {estado: [data]}
 
-def update_firebase(bd_brasil, bd_regioes):
+
+def update_firebase(bd_brasil, bd_brasil_total, bd_regioes):
     import firebase_admin
     from firebase_admin import credentials
     from firebase_admin import db
@@ -438,6 +482,7 @@ def update_firebase(bd_brasil, bd_regioes):
     ref = db.reference('/')
     ref.set({
         'brasil': bd_brasil['brasil'],
+        'brasil_total': bd_brasil_total['brasil'],
         'regioes': bd_regioes['regioes'],
     })
 
@@ -451,9 +496,11 @@ def update_firebase(bd_brasil, bd_regioes):
 #     save_file(newJson, file_path)
 bd_brasil = generate_new_base_brasil()
 save_file(bd_brasil, 'bd/brasil.json')
+bd_brasil_total = generate_num_casos_abs('brasil')
+save_file(bd_brasil, 'bd/brasil_total.json')
 bd_estados = generate_new_base_estados()
 save_file(bd_estados, 'bd/estados.json')
 bd_regioes = generate_new_base_regioes(bd_estados)
 save_file(bd_regioes, 'bd/regioes.json')
 
-update_firebase(bd_brasil, bd_regioes)
+update_firebase(bd_brasil, bd_brasil_total, bd_regioes)
