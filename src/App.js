@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceArea, Label, ResponsiveContainer
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceArea, Label, ResponsiveContainer, BarChart, Bar
 } from 'recharts';
 import { Helmet } from 'react-helmet';
 import { Layout, PageHeader, Divider, Typography, Tag } from 'antd';
@@ -55,10 +55,13 @@ const COLORS = [
 
 const App = (props) => {
   const [brasil, setBrasil] = useState([]);
+  const [brasilTotal, setBrasilTotal] = useState([]);
   const [regioes, setRegioes] = useState([]);
+  const [semanaAtual, setSemanaAtual] = useState("a semana atual");
   const urlFonteInfoGripe = "<http://info.gripe.fiocruz.br/>";
   const urlFonteCovidBrasil = "<https://apify.com/pocesar/covid-brazil>";
   const urlFonteCovidMundo = "<https://github.com/javieraviles/covidAPI>";
+  const urlFontePopulacao = "<https://countrymeters.info/pt/Brazil>";
   const contactEmail = Buffer.from('Y29udGF0b1thdF1hcnRodXJhc3N1bmNhby5jb20=', 'base64').toString('utf-8');
 
   useEffect(() => {
@@ -69,6 +72,16 @@ const App = (props) => {
       // data = data['brasil'];
       // console.log('Brasil: ', data);
       setBrasil(data);
+      let diaAtual = data[data.length-1]['epiweek_label'];
+      const regex = new RegExp("_(.*)", "g");
+      diaAtual = regex.exec(diaAtual)[1]
+      setSemanaAtual(diaAtual.replace("-", " de "));
+    }).catch(function() {
+        console.error("error");
+    });
+    const urlApiBrasilTotal = 'https://covid-internacoes.firebaseio.com/brasil_total.json';
+    fetch(urlApiBrasilTotal).then(res => res.json()).then(data => {
+      setBrasilTotal(data);
     }).catch(function() {
         console.error("error");
     });
@@ -80,6 +93,17 @@ const App = (props) => {
         console.error("error");
     });
   }, []);
+
+  const CustomBarLabel = ({ payload, x, y, value, barWidth }) => {
+    value = value / 1000;
+    value = value.toFixed(0);
+    value = '≈' + value + ' mil casos';
+    return(
+      <text x={x+10} y={y} fill="#777" dy={-6} className="grafico-text label-bar">
+        {value}
+      </text>
+    );
+  }
 
   const getAspect = () => {
     if (props.isMobile()){
@@ -165,10 +189,19 @@ const App = (props) => {
     return [value, name];
   }
 
+  const fixTooltipInt = (value, name) => {
+    name = name.replace('_', ' a ');
+    value = value / 1000;
+    value = value.toFixed(0);
+    value = '≈' + value + ' mil';
+    return [value, name];
+  }
+
   const maxValue = 7
   const fixLabelTooltip = (value) => value.replace('_', ' a ');
   const intervalX = getIntervalX();
   const yAxisRange = generateRangeY(0, maxValue, 0.5);
+  const yAxisRangeBar = generateRangeY(0, 60000, 5000);
   const chartHeight = 50;
 
   return (
@@ -242,6 +275,33 @@ const App = (props) => {
             </div>
             <Text className="grafico-text">Fonte: InfoGripe da FioCruz. *SRAG (Síndrome Respiratória Aguda Grave)</Text>
             </section>
+            <section>
+              <Title level={4}>Brasil: Internações totais por problemas respiratórios* até {semanaAtual}</Title>
+              <div className="parentGrid grafico-container">
+                <div className="rodoabad">
+                  <ResponsiveContainer aspect={getAspect()}>
+                    <BarChart width={730} height={250} data={brasilTotal}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis interval={0} type="number" tick={fixTickY} ticks={yAxisRangeBar}>
+                        <Label
+                          value="Quantidade aproximada"
+                          position="insideLeft"
+                          angle={-90}
+                          className="yAxisLabel"
+                          />
+                      </YAxis>
+                      <Tooltip cursor={{ strokeDasharray: '3 3' }} formatter={fixTooltipInt} labelFormatter={fixLabelTooltip} />
+                      <Legend formatter={fixLegend} />
+                      <Bar dataKey="2020" fill={COLORS[0]} label={<CustomBarLabel />} />
+                      <Bar dataKey="2019" fill={COLORS[1]} label={<CustomBarLabel />} />
+                      <Bar dataKey="2017_2019" fill={COLORS[2]} label={<CustomBarLabel />} />
+                      <Bar dataKey="2015_2019" fill={COLORS[3]} label={<CustomBarLabel />} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+               </div>
+            </section>
             <section className="section-grafico">
               <Title level={4}>Regiões do País: Incidência de hospitalizados por problemas respiratórios*</Title>
               <div className="parentGrid grafico-container">
@@ -314,6 +374,9 @@ const App = (props) => {
             <Paragraph>
               As áreas de limite são definidas baseadas no <a href="http://info.gripe.fiocruz.br/help">Help do Info Grip</a>
             </Paragraph>
+            <Paragraph>
+              O gráfico de barras contém o cálculo do valor por 100 mil habitantes multiplicado pela quantidade de habitantes (em 100 mil) do país em determinado ano.
+            </Paragraph>
             <Title level={4}>Limitações</Title>
             <Paragraph>
               Alguns dados mais recentes são reportados como "Dado estáveis. Sujeito à pequenas alterações", "Estimado. Sujeito à alterações" e "Dados incompletos. Sujetio à grandes alterações", dessa forma devemos entender que alguns dados, principalmente das semanas mais recentes poderão sofrer alterações, tanto para valores menores quanto para valores maiores. Mais informações sobre os dados ver o <a href="http://info.gripe.fiocruz.br/help">Help do Info Grip</a>.
@@ -330,6 +393,9 @@ const App = (props) => {
             </Text></Paragraph>
             <Paragraph><Text>
               Javier Aviles. CovidAPI - Coronavirus API for Current cases by country COVID-19. Disponível em: {urlFonteCovidMundo}.
+            </Text></Paragraph>
+            <Paragraph><Text>
+              CountryMeters. População do Brasil. Disponível em: {urlFontePopulacao}.
             </Text></Paragraph>
           </section>
           <Divider />

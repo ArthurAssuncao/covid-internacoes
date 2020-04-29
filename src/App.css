@@ -95,6 +95,10 @@
   color: #333;
 }
 
+.label-bar {
+  font-weight: bold;
+}
+
 @media(min-width: 0px) {
   .App {
     flex-direction: row;
@@ -125,6 +129,9 @@
   }
   .grafico-text {
     font-size: 11px;
+  }
+  .label-bar {
+    font-size: 15px;
   }
 }
 
@@ -164,5 +171,8 @@
   }
   .grafico-text {
     font-size: 13px;
+  }
+  .label-bar {
+    font-size: 18px;
   }
 }
